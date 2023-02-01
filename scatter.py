@@ -15,13 +15,13 @@ app.layout = html.Div([
     dcc.Dropdown(id ='scatt-dd', options=nbhdLs.copy(), multi=True, placeholder= "Select Neighbourhoods:"),
     dcc.Graph(id='scatter-plot'),
     html.P("Filter by Rating:"),
-    dcc.RangeSlider(id='range-slider',
-        min=0,
-        max=5,
-        step=0.1,
-        marks={0:"0", 5:"5"},
-        value=[0, 5]
-        ),
+    # dcc.RangeSlider(id='range-slider',
+    #     min=0,
+    #     max=5,
+    #     step=0.1,
+    #     marks={0:"0", 5:"5"},
+    #     value=[0, 5]
+    #     ),
     ])
 
 
@@ -43,10 +43,13 @@ def update_scatter_plot(scatter_select):
                     ]
                 )
     scatter = px.scatter(scatterFrame,
-            y = "rating",
+            y = "review rate number",
             x = "price",
             color = "neighborhood group")
     return scatter
 
+# def test(scattercontent):
+#     return f'{scattercontent}'
+    
 if __name__ == "__main__":
     app.run_server(debug=True)
