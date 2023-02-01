@@ -1,3 +1,5 @@
-# VISION
+# JBI100 project
 # **DO NOT WORK IN MAIN**
-JBI100 Project
+
+dataclean.ipynb contains the datacleaning with explanatory comments
+vioPlot.py contains a working violin plot by selected neighbourhood
