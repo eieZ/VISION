@@ -5,7 +5,7 @@ from dash import html
 import plotly.graph_objs as go
 neighbourhood_groups = ['Manhattan', 'Brooklyn', 'Queens', 'Staten Island', 'Bronx']
 
-df = pd.read_csv("Cleaned_data_bar_distance.csv")
+df = pd.read_csv("datasets/Clean_data_bar_distance.csv")
 
 app = Dash(__name__)
 
