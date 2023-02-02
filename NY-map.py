@@ -33,13 +33,13 @@ app.layout = html.Div([
 
 def update_figure_1(selected_neighbourhoodgroups, price_range, bar_distance):
     df_filtered_neighbourhood = df[(df['neighbourhood group'].isin(selected_neighbourhoodgroups))]
-    df_filtered_price = df_filtered_neighbourhood.loc[(df_filtered_neighbourhood['testprice'] >= price_range[0]) & (df['testprice'] <= price_range[1])]
+    df_filtered_price = df_filtered_neighbourhood.loc[(df_filtered_neighbourhood['price'] >= price_range[0]) & (df['price'] <= price_range[1])]
     df_filtered_bar_distance = df_filtered_price.loc[(df_filtered_price['distance_to_closest_bar_m'] >= bar_distance[0]) & (df_filtered_price['distance_to_closest_bar_m'] <= bar_distance[1])]
     df_shown = df_filtered_bar_distance
 
 
-    graph = px.scatter_mapbox(df_shown, lat="lat", lon="long", hover_name="NAME", hover_data=["testprice"],
-                            color_discrete_sequence=["dodgerblue"], zoom=3, height=700, color = 'neighbourhood group')
+    graph = px.scatter_mapbox(df_shown, lat="lat", lon="long", hover_name="NAME", hover_data=["price"],
+                             zoom=3, height=700, color= 'neighbourhood group')
     graph.update_layout(mapbox_style="carto-positron")
     graph.update_layout(margin={"r":0,"t":0,"l":0,"b":0})
     graph.update_mapboxes(bounds=dict(east = -73.163492 , north = 40.985341, south = 40.443028, west = -74.738340))
@@ -58,10 +58,10 @@ def update_figure_1(selected_neighbourhoodgroups, price_range, bar_distance):
 def update_figure_2(selected_neighbourhoodgroups, price_range, bar_distance):
 
     df_filtered_neighbourhood = df[(df['neighbourhood group'].isin(selected_neighbourhoodgroups))]
-    df_filtered_price = df_filtered_neighbourhood.loc[(df_filtered_neighbourhood['testprice'] >= price_range[0]) & (df['testprice'] <= price_range[1])]
+    df_filtered_price = df_filtered_neighbourhood.loc[(df_filtered_neighbourhood['price'] >= price_range[0]) & (df['price'] <= price_range[1])]
     df_filtered_bar_distance = df_filtered_price.loc[(df_filtered_price['distance_to_closest_bar_m'] >= bar_distance[0]) & (df_filtered_price['distance_to_closest_bar_m'] <= bar_distance[1])]
     df_shown = df_filtered_bar_distance
-    violin_plot = px.violin(df_shown, y='testprice', x='neighbourhood group', box=True, color = 'neighbourhood group')
+    violin_plot = px.violin(df_shown, y='price', x='neighbourhood group', box=True, color = 'neighbourhood group')
 
     return violin_plot
 
@@ -77,17 +77,17 @@ def update_figure_2(selected_neighbourhoodgroups, price_range, bar_distance):
 def update_figure_3(selected_neighbourhoodgroups, price_range, bar_distance):
 
     df_filtered_neighbourhood = df[(df['neighbourhood group'].isin(selected_neighbourhoodgroups))]
-    df_filtered_price = df_filtered_neighbourhood.loc[(df_filtered_neighbourhood['testprice'] >= price_range[0]) & (df['testprice'] <= price_range[1])]
+    df_filtered_price = df_filtered_neighbourhood.loc[(df_filtered_neighbourhood['price'] >= price_range[0]) & (df['price'] <= price_range[1])]
     df_filtered_bar_distance = df_filtered_price.loc[(df_filtered_price['distance_to_closest_bar_m'] >= bar_distance[0]) & (df_filtered_price['distance_to_closest_bar_m'] <= bar_distance[1])]
     df_shown = df_filtered_bar_distance
 
     if len(selected_neighbourhoodgroups) > 0:
 
        # mn, max = price_range
-        #local = data[(data['testprice'] > mn) & (data['testprice'] < max)]
+        #local = data[(data['price'] > mn) & (data['price'] < max)]
         #dcp = local[local['neighbourhood group'].isin(valchosen)]
 
-        ddF = df_shown[['neighbourhood group', 'testprice', 'review rate number']].reset_index()
+        ddF = df_shown[['neighbourhood group', 'price', 'review rate number']].reset_index()
         del ddF['index']
         rats = pd.DataFrame()
         ls = []
