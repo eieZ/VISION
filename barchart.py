@@ -68,7 +68,8 @@ def barupdater(n, valchosen, ranger):
             ls.append(ddF[ddF['neighbourhood group']==name]['review rate number'].sum() / len(ddF[ddF['neighbourhood group']==name]))
         rats['average rating'] = ls
         rats['nbhds']= valchosen
-        bar = px.bar(rats, x = 'nbhds', y='average rating')
+        bar = px.bar(rats, x = 'nbhds', y='average rating', color='nbhds')
+        bar.update_yaxes(range = [0,5])
         return bar
     else:
         raise dash.exceptions.PreventUpdate()
