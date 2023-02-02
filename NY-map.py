@@ -13,10 +13,13 @@ app.layout = html.Div([
     #dcc.Checklist(id = 'neighbourhoodgroup_name', to be changed with dropdown
                  #options = neighbourhood_groups,
                  # value = neighbourhood_groups),
-    html.H1('Violin Plot With drop down in Dash'),
+    html.H1('JBI100 Dashboard'),
+    html.P('Neighbourhood Selection:'),
     dcc.Dropdown(id='neighbourhoodgroup_name', options=neighbourhood_groups.copy(), multi=True,
                  placeholder="Select Neighbourhoods:", value=neighbourhood_groups),
+    html.P('Price Range:'),
     dcc.RangeSlider(0, 1200, value=[0, 1200], id='price_rangeslider'),
+    html.P('Distance To Bar:'),
     dcc.RangeSlider(0, 2700, value=[0, 2700], id='bar_distance_rangeslider'),
     dcc.Graph(id='graph'),
     dcc.Graph(id='violin-plot', figure={}),
@@ -95,8 +98,10 @@ def update_figure_3(selected_neighbourhoodgroups, price_range, bar_distance):
             ls.append(ddF[ddF['neighbourhood group'] == name]['review rate number'].sum() / len(
                 ddF[ddF['neighbourhood group'] == name]))
         rats['average rating'] = ls
-        rats['nbhds'] = selected_neighbourhoodgroups
-        bar = px.bar(rats, x='nbhds', y='average rating', color = 'nbhds')
+        rats['Neighbourhood'] = selected_neighbourhoodgroups
+        bar = px.bar(rats, x='Neighbourhood', y='average rating', color = 'Neighbourhood', title='Average AirBnB Review For Chosen Neighbourhood')
+        bar.update_xaxes(title_text='Neighbourhood')
+        bar.update_yaxes(title_text='Mean Rating')
         bar.update_layout(
         yaxis=dict(
         range=[0, 5]
