@@ -53,3 +53,6 @@ def update_scatter_plot(scatter_select):
     
 if __name__ == "__main__":
     app.run_server(debug=True)
+
+
+

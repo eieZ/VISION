@@ -31,7 +31,7 @@ def update_violin_plot(neighbourhoods):
 
 app.layout = html.Div([
     html.H1('Violin Plot With drop down in Dash'),
-    dcc.Dropdown(id='neigh-dd', options=nbhdGrpls.copy(), multi=True, placeholder="Select Neighbourhoods:"),
+    dcc.Dropdown(id='neigh-dd', options=nbhdGrpls.copy(), multi=True, placeholder="Select Neighbourhoods:", value= ['Brooklyn']),
     dcc.Graph(id='violin-plot', figure={})
 ])
 
