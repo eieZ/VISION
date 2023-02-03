@@ -1,3 +1,4 @@
+#imports
 from dash import Dash, dcc, Output, Input, html
 import plotly.io as pio
 import pandas as pd
@@ -49,53 +50,63 @@ app.layout = html.Div([
                 html.H2('Rating Range:', style= dict(width='20%', display='inline-block'))
             ]), #  second row second column
             html.Div(children=[
-                html.Div(dcc.Dropdown(
-                    id='verification-status',
-                    options=['verified', 'unconfirmed', 'All'],
-                    placeholder='Verification Status:',
-                    ),style= dict(width= '20%', display= 'inline-block')),
+                # Verification status drop down
+                html.Div(
+                    dcc.Dropdown(
+                        id='verification-status',
+                        options=['verified', 'unconfirmed', 'All'],
+                        placeholder='Verification Status:',
+                        ),style= dict(width= '20%', display= 'inline-block')),
+                # bookability status drop down
                 html.Div(
                     dcc.Dropdown(
                         id='insta-bookable',
                         options= ['Yes', 'No', 'All'],
                         placeholder='Display Instantly Bookable',
                         ),style=dict(width= '20%', display= 'inline-block')),
-                    html.Div(
-                        dcc.Dropdown(
-                    id='room-type',
-                    options=['Private room', 'Entire home/apt', 'Shared room', 'Hotel room', 'All'],
-                    placeholder='Room Type:',
-                    value='All'
-                    ),style= dict(width= '20%', display= 'inline-block')),
-                    html.Div(dcc.Dropdown(
-                    id='cancelation-policy',
-                    options=['strict', 'moderate', 'flexible', 'All'],
-                    placeholder='Cancellation Policy:',
-                    value='All'
-                    ),style= dict(width= '20%', display= 'inline-block')),
-                    html.Div(dcc.RangeSlider(
+                #room type drop down
+                html.Div(
+                    dcc.Dropdown(
+                        id='room-type',
+                        options=['Private room', 'Entire home/apt', 'Shared room', 'Hotel room', 'All'],
+                        placeholder='Room Type:',
+                        value='All'
+                        ),style= dict(width= '20%', display= 'inline-block')),
+                # cancelation policy drop down
+                html.Div(
+                    dcc.Dropdown(
+                        id='cancelation-policy',
+                        options=['strict', 'moderate', 'flexible', 'All'],
+                        placeholder='Cancellation Policy:',
+                        value='All'
+                        ),style= dict(width= '20%', display= 'inline-block')),
+                # rating range slider
+                html.Div(
+                    dcc.RangeSlider(
                         1,
                         5,
                         id= 'rating-range',
                         value=[1,5]
                         ),style=dict(width= '20%', display= 'inline-block'))
-
                     ]),
-
+            #row 2 col 2
+            # distance to restauration slider and label
             html.H2('Distance To Restauration:'),
-            html.Div(dcc.RangeSlider(
-                0, 
-                2700, 
-                value=[0, 2700], 
-                id='bar_distance_rangeslider'
-                ), style=dict(width='100%')
+            html.Div(
+                dcc.RangeSlider(
+                    0, 
+                    2700, 
+                    value=[0, 2700], 
+                    id='bar_distance_rangeslider'
+                    ), style=dict(width='100%')
             )
         ], style=dict(width='45%', display= 'inline-block'))
         ]),
+        # map
         html.Div(dcc.Graph(id='graph') ,style=dict(width = '50%', display = 'inline-block')),
-
+        # bar chart
         html.Div(dcc.Graph(id='bar-plot', figure={}), style=dict(width = '45%', display = 'inline-block') ),
-
+        # violin plot
         html.Div(dcc.Graph(id='violin-plot', figure={}), style=dict(width= '100%'))
 
     
@@ -124,36 +135,38 @@ def update_figure_1(selected_neighbourhoodgroups, price_range, bar_distance, ver
     localDf = df.copy().sort_values(by=['Neighbourhood Group'])
 
     # filtering of the data
-
+    # filter for verification status
     if verif == 'verified':
         localDf = localDf[localDf['host_identity_verified']==True]
     elif verif == 'unconfirmed':
         localDf = localDf[localDf['host_identity_verified']==False]
     
-    
+    #filter for bookability
     if book == 'Yes':
         localDf = localDf[localDf['instant_bookable']==True]
     elif book == 'No':
         localDf = localDf[localDf['instant_bookable']==False]
     
+    #filter for room type
     if room_type != 'All':
         localDf = localDf[pd.get_dummies(localDf['room type'])[room_type]==1]
     
+    #filter for cancelation policy
     if cancel_pol != 'All':
         localDf = localDf[pd.get_dummies(localDf['cancellation_policy'])[cancel_pol]==1]
-
+    #filter for review rating
     localDf = localDf[(localDf['review rate number']>= rating_range[0]) & (localDf['review rate number']<= rating_range[1])]
 
 
-
-    
-
+    # filter by neighbourhood
     df_filtered_neighbourhood = localDf[(localDf['Neighbourhood Group'].isin(selected_neighbourhoodgroups))]
+    # filter by price range
     df_filtered_price = df_filtered_neighbourhood.loc[(df_filtered_neighbourhood['price'] >= price_range[0]) & (df_filtered_neighbourhood['price'] <= price_range[1])]
+    #filter by proximity to restauration
     df_filtered_bar_distance = df_filtered_price.loc[(df_filtered_price['distance_to_closest_bar_m'] >= bar_distance[0]) & (df_filtered_price['distance_to_closest_bar_m'] <= bar_distance[1])]
     df_shown = df_filtered_bar_distance
 
-
+    #map
     graph = px.scatter_mapbox(
         df_shown, 
         lat="lat", 
@@ -173,8 +186,7 @@ def update_figure_1(selected_neighbourhoodgroups, price_range, bar_distance, ver
     graph.update_layout(uirevision = 'foo') #turn off if graph is shifting a lot with updates
     graph.update_layout(legend= dict(x = 0))
     return graph
-    # else:
-    #     raise dash.exceptions.PreventUpdate()
+
 
 #part for the violin plot
 
@@ -194,29 +206,40 @@ def update_figure_2(selected_neighbourhoodgroups, price_range, bar_distance, ver
     localDf = df.copy().sort_values(by=['Neighbourhood Group'])
 
     # filtering of the data
+    # filter for verification status
+
     if verif == 'verified':
         localDf = localDf[localDf['host_identity_verified']==True]
     elif verif == 'unconfirmed':
         localDf = localDf[localDf['host_identity_verified']==False]
     
-    
+    #filter for bookability
     if book == 'Yes':
         localDf = localDf[localDf['instant_bookable']==True]
     elif book == 'No':
         localDf = localDf[localDf['instant_bookable']==False]
     
+    #filter for room type
 
     if room_type != 'All':
         localDf = localDf[pd.get_dummies(localDf['room type'])[room_type]==1]
 
+    #filter for cancelation policy
+
     if cancel_pol != 'All':
         localDf = localDf[pd.get_dummies(localDf['cancellation_policy'])[cancel_pol]==1]
+    #filter for review rating
     
     localDf = localDf[(localDf['review rate number']>= rating_range[0]) & (localDf['review rate number']<= rating_range[1])]
 
+    # filter by neighbourhood
 
     df_filtered_neighbourhood = localDf[(localDf['Neighbourhood Group'].isin(selected_neighbourhoodgroups))]
+    # filter by price range
+    
     df_filtered_price = df_filtered_neighbourhood.loc[(df_filtered_neighbourhood['price'] >= price_range[0]) & (df['price'] <= price_range[1])]
+    #filter by proximity to restauration
+   
     df_filtered_bar_distance = df_filtered_price.loc[(df_filtered_price['distance_to_closest_bar_m'] >= bar_distance[0]) & (df_filtered_price['distance_to_closest_bar_m'] <= bar_distance[1])]
     df_shown = df_filtered_bar_distance
     df_shown['Price'] = df_shown['price']
@@ -257,31 +280,47 @@ def update_figure_3(selected_neighbourhoodgroups, price_range, bar_distance, ver
     localDf = df.copy().sort_values(by=['Neighbourhood Group'])
 
     # filtering of the data
+    # filter for verification status
 
     if verif == 'verified':
         localDf = localDf[localDf['host_identity_verified']==True]
     elif verif == 'unconfirmed':
         localDf = localDf[localDf['host_identity_verified']==False]
     
+    #filter for bookability
     
     if book == 'Yes':
         localDf = localDf[localDf['instant_bookable']==True]
     elif book == 'No':
         localDf = localDf[localDf['instant_bookable']==False]
 
+    #filter for room type
+
     if room_type != 'All':
         localDf = localDf[pd.get_dummies(localDf['room type'])[room_type]==1]
+
+    #filter for cancelation policy
     
     if cancel_pol != 'All':
         localDf = localDf[pd.get_dummies(localDf['cancellation_policy'])[cancel_pol]==1]
 
+      #filter for review rating
+
     localDf = localDf[(localDf['review rate number']>= rating_range[0]) & (localDf['review rate number']<= rating_range[1])]
 
+    # filter by neighbourhood
+
     df_filtered_neighbourhood = localDf[(localDf['Neighbourhood Group'].isin(selected_neighbourhoodgroups))]
+ 
+    # filter by price range
     df_filtered_price = df_filtered_neighbourhood.loc[(df_filtered_neighbourhood['price'] >= price_range[0]) & (df['price'] <= price_range[1])]
+    #filter by proximity to restauration
+ 
     df_filtered_bar_distance = df_filtered_price.loc[(df_filtered_price['distance_to_closest_bar_m'] >= bar_distance[0]) & (df_filtered_price['distance_to_closest_bar_m'] <= bar_distance[1])]
+ 
     df_shown = df_filtered_bar_distance
 
+    #calculation for average ratings
     ddF = df_shown[['Neighbourhood Group', 'price', 'review rate number']].reset_index()
     del ddF['index']
     rats = pd.DataFrame()
