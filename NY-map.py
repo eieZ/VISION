@@ -29,7 +29,7 @@ app.layout = html.Div([
                 multi=True,
                 placeholder="Select Neighbourhoods:",
                 value=neighbourhood_groups,
-                ), style=dict(width='100%')),
+                ), style=dict(width='98%', textAlign = 'center', )),
 
             html.H2('Price Range:'),
             html.Div(dcc.RangeSlider(
