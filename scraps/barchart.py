@@ -6,6 +6,12 @@ import plotly.express as px
 from vioPlot import getData
 data = getData()
 nbhdLs = ['Manhattan', 'Brooklyn', 'Queens', 'Staten Island', 'Bronx']
+dctcolor = {'Manhattan': '#636EFA', 'Brooklyn': '#EF553B', 'Queens': '#00CC96', 'Staten Island': '#AB63FA', 'Bronx':'#FFA15A'}
+clist = ['#636EFA', '#EF553B', '#00CC96', '#AB63FA', '#FFA15A']
+def colorpicker(var):
+    dctcolor = {'Manhattan': '#636EFA', 'Brooklyn': '#EF553B', 'Queens': '#00CC96', 'Staten Island': '#AB63FA', 'Bronx':'#FFA15A'}
+    return dctcolor[var]
+
 app = Dash(__name__)
 
 app.layout= html.Div([
@@ -64,11 +70,15 @@ def barupdater(n, valchosen, ranger):
         del ddF['index']
         rats = pd.DataFrame()
         ls = []
+
         for name in valchosen:
             ls.append(ddF[ddF['neighbourhood group']==name]['review rate number'].sum() / len(ddF[ddF['neighbourhood group']==name]))
+
+
+
         rats['average rating'] = ls
         rats['nbhds']= valchosen
-        bar = px.bar(rats, x = 'nbhds', y='average rating', color='nbhds')
+        bar = px.bar(rats, x = 'nbhds', y='average rating')
         bar.update_yaxes(range = [0,5])
         return bar
     else:

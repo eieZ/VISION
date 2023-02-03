@@ -1,6 +1,7 @@
 # JBI100 project
 # **DO NOT WORK IN MAIN**
 
-dataclean.ipynb contains the datacleaning with explanatory comments
-vioPlot.py contains a working violin plot by selected neighbourhood
-barchart.py contains the working barchart
+the NY-map.py contains the whole dashboard
+
+
+The scraps folder contains individual implementation of certain parts of the dashboard (e.g. violin plot).
