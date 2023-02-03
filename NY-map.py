@@ -39,7 +39,7 @@ app.layout = html.Div([
                 id='price_rangeslider', 
                 ), style=dict(width='100%')),
         ],style=dict(width = '45%',display = 'inline-block')),
-            #first row second column
+        #first row second column
         html.Div(children=[
             html.Div(children= [
                 html.H2('Verification Status:', style=dict(width='20%', display='inline-block')),
@@ -47,7 +47,7 @@ app.layout = html.Div([
                 html.H2('Room type:' , style=dict(width='20%', display='inline-block')),
                 html.H2('Cancelation Policy:',style=dict(width='20%', display='inline-block')),
                 html.H2('Rating Range:', style= dict(width='20%', display='inline-block'))
-            ]),
+            ]), #  second row second column
             html.Div(children=[
                 html.Div(dcc.Dropdown(
                     id='verification-status',
@@ -102,21 +102,9 @@ app.layout = html.Div([
 
 ])
 
-    # html.Label('Neighbourhood Selection:'),
-    # dcc.Dropdown(id='neighbourhoodgroup_name', options=neighbourhood_groups.copy(), multi=True, placeholder="Select Neighbourhoods:", value=neighbourhood_groups),
-    # html.P('Price Range:'),
-    # dcc.RangeSlider(0, 1200, value=[0, 1200], id='price_rangeslider'),
-
-    # html.P('Distance To Bar:'),
-    # dcc.RangeSlider(0, 2700, value=[0, 2700], id='bar_distance_rangeslider'),
-
-    # html.P("Geographical Distribution Of AirBnBs In New York City"),
-    # dcc.Graph(id='graph'),
-    # dcc.Graph(id='violin-plot', figure={}),
-    # dcc.Graph(id='bar-plot', figure={}),
 
 
-#this part is for the map
+
 @app.callback(
     Output('graph', 'figure'),
     Input('neighbourhoodgroup_name', 'value'),
@@ -131,12 +119,11 @@ app.layout = html.Div([
 
 
 def update_figure_1(selected_neighbourhoodgroups, price_range, bar_distance, verif, book, room_type, cancel_pol, rating_range):
-    # print(f'{verif}')
-    # print(f'{book}')
-    
+
 
     localDf = df.copy().sort_values(by=['Neighbourhood Group'])
 
+    # filtering of the data
 
     if verif == 'verified':
         localDf = localDf[localDf['host_identity_verified']==True]
@@ -206,6 +193,7 @@ def update_figure_1(selected_neighbourhoodgroups, price_range, bar_distance, ver
 def update_figure_2(selected_neighbourhoodgroups, price_range, bar_distance, verif, book, room_type, cancel_pol, rating_range):
     localDf = df.copy().sort_values(by=['Neighbourhood Group'])
 
+    # filtering of the data
     if verif == 'verified':
         localDf = localDf[localDf['host_identity_verified']==True]
     elif verif == 'unconfirmed':
@@ -233,6 +221,7 @@ def update_figure_2(selected_neighbourhoodgroups, price_range, bar_distance, ver
     df_shown = df_filtered_bar_distance
     df_shown['Price'] = df_shown['price']
 
+    # violin plot
     violin_plot = px.violin(
         df_shown, 
         y='Price', 
@@ -267,6 +256,7 @@ def update_figure_3(selected_neighbourhoodgroups, price_range, bar_distance, ver
     # selected_neighbourhoodgroups = selected_neighbourhoodgroups.sort()
     localDf = df.copy().sort_values(by=['Neighbourhood Group'])
 
+    # filtering of the data
 
     if verif == 'verified':
         localDf = localDf[localDf['host_identity_verified']==True]
@@ -301,6 +291,8 @@ def update_figure_3(selected_neighbourhoodgroups, price_range, bar_distance, ver
             ddF[ddF['Neighbourhood Group'] == name]))
     rats['average rating'] = ls
     rats['Neighbourhood Group'] = selected_neighbourhoodgroups
+
+    # bar chart
     bar = px.bar(
         rats, 
         x='Neighbourhood Group', 
